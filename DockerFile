@@ -1,15 +1,21 @@
 FROM centos:7
 MAINTAINER sanadshamoon92@gmail.com
 
-# --- FIX: Point to Vault Archive (Required since CentOS 7 EOL) ---
+# --- 1. Fix Repo URL (Keep this, it's working!) ---
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
-# -----------------------------------------------------------------
 
-RUN yum install -y httpd zip unzip
+# --- 2. Install curl and update SSL libraries ---
+# We update 'nss' to ensure the old CentOS 7 can verify modern HTTPS certificates
+RUN yum install -y httpd zip unzip curl && \
+    yum -y update nss
 
-ADD https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip /var/www/html/
 WORKDIR /var/www/html/
+
+# --- 3. Use curl instead of ADD ---
+# -L follows redirects, -o saves it with a specific name
+RUN curl -o photogenic.zip -L https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip
+
 RUN unzip photogenic.zip
 RUN cp -rvf photogenic/* .
 RUN rm -rf photogenic photogenic.zip
