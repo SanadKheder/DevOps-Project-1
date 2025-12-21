@@ -1,21 +1,18 @@
 FROM centos:7
 MAINTAINER sanadshamoon92@gmail.com
 
-# --- 1. Fix Repo URL (Keep this, it's working!) ---
+# --- 1. Fix Repo URL ---
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
-# --- 2. Install curl and update SSL libraries ---
-# We update 'nss' to ensure the old CentOS 7 can verify modern HTTPS certificates
-RUN yum install -y httpd zip unzip curl && \
-    yum -y update nss
+# --- 2. Install Packages ---
+RUN yum install -y httpd zip unzip
 
+# --- 3. COPY the file from the server (instead of downloading) ---
 WORKDIR /var/www/html/
+COPY photogenic.zip .
 
-# --- 3. Use curl instead of ADD ---
-# -L follows redirects, -o saves it with a specific name
-RUN curl -o photogenic.zip -L https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip
-
+# --- 4. Unzip and Configure ---
 RUN unzip photogenic.zip
 RUN cp -rvf photogenic/* .
 RUN rm -rf photogenic photogenic.zip
