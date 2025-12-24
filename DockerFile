@@ -13,9 +13,12 @@ WORKDIR /var/www/html/
 COPY photogenic.zip .
 
 # --- 4. Unzip and Configure ---
+# ... previous steps ...
+
 RUN unzip photogenic.zip
-RUN cp -rvf photogenic/* .
-RUN rm -rf photogenic photogenic.zip
+# Use a wildcard to copy contents from WHATEVER folder was created
+RUN cp -rvf */* . 
+RUN rm -rf photogenic.zip
 
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 EXPOSE 80 22
