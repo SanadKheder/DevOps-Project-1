@@ -1,15 +1,17 @@
 FROM centos:7
 MAINTAINER sanadshamoon92@gmail.com
 
-# 1. Fix Repos
+# 1. Fix Repos (Required for CentOS 7)
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
-# 2. Install Tools
+# 2. Install Packages (Added 'curl' here)
 RUN yum install -y httpd zip unzip curl
 
-# 3. Download INSIDE the image (This bypasses the Host SSL error)
 WORKDIR /var/www/html/
+
+# 3. DOWNLOAD HERE instead of on the server
+# CentOS 7 has older SSL that works with this site automatically.
 RUN curl -A "Mozilla/5.0" -L -o photogenic.zip https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip
 
 # 4. Unzip and Configure
