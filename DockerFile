@@ -1,24 +1,21 @@
 FROM centos:7
 MAINTAINER sanadshamoon92@gmail.com
 
-# --- 1. Fix Repo URL ---
+# 1. Fix Repos
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
-# --- 2. Install Packages ---
-RUN yum install -y httpd zip unzip
+# 2. Install Tools
+RUN yum install -y httpd zip unzip curl
 
-# --- 3. COPY the file from the server (instead of downloading) ---
+# 3. Download INSIDE the image (This bypasses the Host SSL error)
 WORKDIR /var/www/html/
-COPY photogenic.zip .
+RUN curl -A "Mozilla/5.0" -L -o photogenic.zip https://www.free-css.com/assets/files/free-css-templates/download/page254/photogenic.zip
 
-# --- 4. Unzip and Configure ---
-# ... previous steps ...
-
+# 4. Unzip and Configure
 RUN unzip photogenic.zip
-# Use a wildcard to copy contents from WHATEVER folder was created
-RUN cp -rvf */* . 
-RUN rm -rf photogenic.zip
+RUN cp -rvf photogenic/* .
+RUN rm -rf photogenic photogenic.zip
 
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 EXPOSE 80 22
