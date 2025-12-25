@@ -8,8 +8,8 @@ RUN yum install -y httpd zip unzip
 
 ADD https://ftp.drupal.org/files/projects/photogenic-7.x-1.0.zip /var/www/html/
 WORKDIR /var/www/html/
-RUN unzip photogenic.zip
-RUN cp -rvf photogenic/* .
-RUN rm -rf photogenic photogenic.zip
+RUN unzip photogenic-7.x-1.0.zip
+RUN cp -rvf photogenic-7.x-1.0/* .
+RUN rm -rf photogenic-7.x-1.0 photogenic-7.x-1.0.zip
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 EXPOSE 80
