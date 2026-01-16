@@ -1,21 +1,19 @@
-tasks:
+- hosts: all
+  become: true
+  tasks:
     - name: delete old deployment
       command: kubectl delete -f /home/ubuntu/Deployment.yml
-      become: true
-      # Tell root user where to find the config
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
-      # Prevent failure if the deployment doesn't exist yet
+      # This prevents the pipeline from failing if the deployment doesn't exist yet
       ignore_errors: yes
 
     - name: create new deployment
       command: kubectl apply -f /home/ubuntu/Deployment.yml
-      become: true
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
 
     - name: create service
       command: kubectl apply -f /home/ubuntu/Service.yml
-      become: true
       environment:
         KUBECONFIG: /home/ubuntu/.kube/config
