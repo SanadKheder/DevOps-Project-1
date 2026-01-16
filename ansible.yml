@@ -1,16 +1,21 @@
-- hosts: all
-  # become: true  <-- DELETE OR COMMENT OUT THIS LINE
-  tasks: 
-     - name: delete old deployment
-       command: kubectl delete -f /home/ubuntu/Deployment.yml
-       ignore_errors: yes
+tasks:
+    - name: delete old deployment
+      command: kubectl delete -f /home/ubuntu/Deployment.yml
+      become: true
+      # Tell root user where to find the config
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
+      # Prevent failure if the deployment doesn't exist yet
+      ignore_errors: yes
 
-     - name: delete old service
-       command: kubectl delete -f /home/ubuntu/Service.yml
-       ignore_errors: yes
+    - name: create new deployment
+      command: kubectl apply -f /home/ubuntu/Deployment.yml
+      become: true
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
 
-     - name: create new deployment
-       command: kubectl apply -f /home/ubuntu/Deployment.yml
-
-     - name: create new service
-       command: kubectl apply -f /home/ubuntu/Service.yml
+    - name: create service
+      command: kubectl apply -f /home/ubuntu/Service.yml
+      become: true
+      environment:
+        KUBECONFIG: /home/ubuntu/.kube/config
