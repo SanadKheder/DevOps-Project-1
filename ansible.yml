@@ -1,19 +1,11 @@
 - hosts: all
   become: true
-  tasks:
-    - name: delete old deployment
-      command: kubectl delete -f /home/ubuntu/Deployment.yml
-      environment:
-        KUBECONFIG: /home/ubuntu/.kube/config
-      # This prevents the pipeline from failing if the deployment doesn't exist yet
-      ignore_errors: yes
-
-    - name: create new deployment
-      command: kubectl apply -f /home/ubuntu/Deployment.yml
-      environment:
-        KUBECONFIG: /home/ubuntu/.kube/config
-
-    - name: create service
-      command: kubectl apply -f /home/ubuntu/Service.yml
-      environment:
-        KUBECONFIG: /home/ubuntu/.kube/config
+  tasks: 
+     - name: delete old deployment
+       command: kubectl delete -f /home/ubuntu/Deployment.yml
+     - name: delete old service
+       command: kubectl delete -f /home/ubuntu/Service.yml
+     - name: create new deployment
+       command: kubectl apply -f /home/ubuntu/Deployment.yml
+     - name: create new service
+       command: kubectl apply -f /home/ubuntu/Service.yml
