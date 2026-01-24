@@ -21,7 +21,7 @@ RUN unzip Website.zip
 # FIXED: The folder inside is named 'photogenic', not 'photogenic-7.x-1.0'
 # We use a wildcard '*/' just to be 100% safe.
 RUN cp -rvf */* .
-#RUN rm -rf photogenic photogenic-7.x-1.0.zip
+RUN rm -rf Website.zip
 
 
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
