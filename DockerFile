@@ -6,20 +6,18 @@ RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
 # 2. Install Packages
-RUN yum install -y httpd zip unzip
 
-# 3. Download from Drupal (This URL works!)
-#ADD https://ftp.drupal.org/files/projects/photogenic-7.x-1.0.zip /var/www/html/
+RUN yum install -y httpd zip unzip php php-mysql
+
+# 3. Copy your local project file
 COPY Website.zip /var/www/html/
 
 WORKDIR /var/www/html/
 
 # 4. Unzip and Configure
-#RUN unzip photogenic-7.x-1.0.zip
 RUN unzip Website.zip
 
-# FIXED: The folder inside is named 'photogenic', not 'photogenic-7.x-1.0'
-# We use a wildcard '*/' just to be 100% safe.
+# Move files to main directory
 RUN cp -rvf */* .
 RUN rm -rf Website.zip
 
