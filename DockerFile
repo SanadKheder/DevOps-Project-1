@@ -15,8 +15,8 @@ COPY Website.zip /var/www/html/
 WORKDIR /var/www/html/
 
 # 4. Unzip and Configure
-RUN unzip photogenic-7.x-1.0.zip
-#RUN unzip Website.zip
+#RUN unzip photogenic-7.x-1.0.zip
+RUN unzip Website.zip
 
 # FIXED: The folder inside is named 'photogenic', not 'photogenic-7.x-1.0'
 # We use a wildcard '*/' just to be 100% safe.
