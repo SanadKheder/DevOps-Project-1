@@ -5,21 +5,20 @@ MAINTAINER sanadshamoon92@gmail.com
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
-# 2. Install Packages (Added PHP and MySQL support)
-RUN yum install -y httpd zip unzip php php-mysql
+# 2. Install Packages (Removed zip/unzip, kept PHP)
+RUN yum install -y httpd php php-mysql
 
-# 3. Copy your local project file (Instead of downloading from Drupal)
-COPY Website.zip /var/www/html/
+# 3. Copy the folder directly
+# This command copies the CONTENTS of your local "Website" folder 
+# directly into "/var/www/html/" inside the container.
+COPY Website/ /var/www/html/
 
 WORKDIR /var/www/html/
 
-# 4. Unzip and Configure
-RUN unzip Website.zip
+# 4. Permissions (Optional but recommended for PHP)
+# Ensures Apache owns the files
+RUN chown -R apache:apache /var/www/html/
 
-# Move files from the "Website" folder to the main html folder
-RUN cp -rvf */* .
-RUN rm -rf Website Website.zip
-
-# Start Apache (Listens on PORT 80)
+# 5. Start Apache
 CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
 EXPOSE 80
