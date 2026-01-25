@@ -1,28 +1,13 @@
 <?php
-if (strstr($_SERVER['SERVER_NAME'], 'localhost')){
+$servername = "mysql-service"; // This matches the Service name in YAML
+$username   = "root";
+$password   = "rootpassword";  // Matches the YAML password
+$db         = "website";       // Matches the YAML database
 
-$servername = "localhost";
-$username = "root";
-$password = "";
-$db = "website";
-
-
-}
-///////////////////////////////
-else {
- $servername = "talsprddb02.int.its.rmit.edu.au";
-$username = "s3869994";
-$password = "20022002";
-$db = "s3869994";
-
-}
-
-////////////////////////////
+// Create connection
 $conn = new mysqli($servername, $username, $password, $db);
 
 if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
-
 ?>
-
